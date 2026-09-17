@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radar de Aluguel — Aluguel Anual por Cidade do Litoral</title>
+<meta name="description" content="Preço médio de aluguel anual por cidade e tipologia no litoral paulista, com yield estimado.">
+<style>body{font-family:system-ui;margin:0;background:#f0f9ff;color:#0c4a6e}header{background:linear-gradient(135deg,#0369a1,#0ea5e9);color:#fff;padding:2rem 1rem;text-align:center}header a{color:#bae6fd}main{max-width:820px;margin:1.5rem auto;padding:0 1rem}.card{background:#fff;border-radius:12px;padding:1.2rem;margin:1rem 0;box-shadow:0 2px 8px rgba(2,132,199,.15)}canvas{width:100%}table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{padding:.45rem;border-bottom:1px solid #e0f2fe;text-align:left}select{font-size:1rem;padding:.5rem;border-radius:8px;border:1px solid #7dd3fc}footer{text-align:center;font-size:.85rem;padding:2rem 1rem;color:#0369a1}.net{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.8rem}.net a{background:#e0f2fe;color:#075985;padding:.3rem .6rem;border-radius:999px;text-decoration:none;font-size:.8rem}</style>
+</head>
+<body>
+<header><h1>🏠 Radar de Aluguel</h1><p>Quanto rende o aluguel anual em cada cidade do litoral.</p><a href="https://praia.digital">← praia.digital</a> · <a href="https://praia.digital/apps">Hub de apps</a></header>
+<main>
+<div class="card"><label><b>Tipologia:</b></label> <select id="tip" onchange="render()"><option value="0">Studio / 1 quarto</option><option value="1" selected>2 quartos</option><option value="2">3 quartos</option></select><canvas id="cv" width="780" height="300"></canvas></div>
+<div class="card"><table id="tb"></table></div>
+<div class="card"><h3>Temporada paga mais?</h3><p>Compare as duas estratégias no <a href="https://praia.digital/renda-hibrida">Renda Híbrida</a> e simule o retorno no <a href="https://praia.digital/simulador-roi">Simulador de ROI</a>. Valores de compra no <a href="https://praia.digital/radar-precos">Radar de Preços</a>.</p></div>
+</main>
+<footer><b>Rede Praia Digital</b><div class="net"><a href="https://praia.digital/apps">Hub</a><a href="https://praia.digital/iptu-check">IPTU Check</a><a href="https://praia.digital/seguro-praia">Seguro Praia</a><a href="https://praia.digital/mudei-pra-praia">Mudei pra Praia</a><a href="https://praia.digital/nomade-digital">Nômade Digital</a><a href="https://praia.digital/temporada-pro">Temporada Pro</a></div><p>© 2026 Praia Digital</p></footer>
+<script>
+const D={'Santos':[1900,2700,3900],'Guarujá':[1700,2400,3500],'São Sebastião':[1800,2600,4200],'Praia Grande':[1300,1800,2600],'Ubatuba':[1500,2100,3000],'Bertioga':[1400,2000,3200],'Mongaguá':[900,1300,1900],'Peruíbe':[800,1150,1700]};
+const V={'Santos':520000,'Guarujá':450000,'São Sebastião':550000,'Praia Grande':330000,'Ubatuba':380000,'Bertioga':420000,'Mongaguá':230000,'Peruíbe':210000};
+function render(){
+ const t=+document.getElementById('tip').value,c=document.getElementById('cv').getContext('2d');c.clearRect(0,0,780,300);
+ const ks=Object.keys(D).sort((a,b)=>D[b][t]-D[a][t]),mx=4500,w=780/ks.length;
+ ks.forEach((k,i)=>{const v=D[k][t],h=v/mx*230;c.fillStyle='#0284c7';c.fillRect(i*w+12,280-h,w-24,h);c.fillStyle='#0c4a6e';c.font='11px system-ui';c.fillText(k,i*w+12,296);c.fillText('R$'+v.toLocaleString('pt-BR'),i*w+12,272-h);});
+ document.getElementById('tb').innerHTML='<tr><th>Cidade</th><th>Aluguel/mês</th><th>Yield anual sobre valor de compra</th></tr>'+ks.map(k=>{const y=(D[k][t]*12/V[k]*100).toFixed(1);return '<tr><td>'+k+'</td><td>R$ '+D[k][t].toLocaleString('pt-BR')+'</td><td><b>'+y+'%</b></td></tr>';}).join('');
+}
+render();
+</script>
+</body>
+</html>
